@@ -10,7 +10,7 @@ use crate::alias::{Body, SvcBoxFut};
 
 /// helper function to safely clone a service, see comment
 ///
-/// Services are permitted to panic if call is invoked without obtaining [`Poll::Ready(Ok(())`)] from poll_ready.
+/// Services are permitted to panic if call is invoked without obtaining `Poll::Ready` from poll_ready.
 /// You should therefore be careful when cloning services for example to move them into boxed futures.
 /// Even though the original service is ready, the clone might not be.
 pub fn svc_clone<S: Clone + Sized>(inner: &mut S) -> S {

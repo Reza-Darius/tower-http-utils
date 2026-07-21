@@ -3,7 +3,7 @@
 //! An example of a middleware service where we either want to "pass through" the response unaltered
 //! or build a custom response in case of an error
 //!
-//! in order to stay generic over the underlying service, we need a wrapper like [`ResponseBody`]
+//! in order to stay generic over the underlying service, we need a wrapper like [`WrapBody`]
 //! ```
 //!impl<F, E, ResB> Future for RateLimitFuture<F>
 //! where
