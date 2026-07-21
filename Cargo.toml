@@ -1,0 +1,14 @@
+[package]
+name = "tower-http-utils"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.104"
+bytes = "1.12.1"
+http = "1.4.2"
+http-body-util = "0.1.4"
+hyper = "1.11.0"
+pin-project-lite = "0.2.17"
+tower = { version = "0.5.3", features = ["util"] }
+tracing = "0.1.44"
