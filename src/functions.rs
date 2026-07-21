@@ -20,6 +20,34 @@ pub fn svc_clone<S: Clone + Sized>(inner: &mut S) -> S {
 }
 
 /// construct an off-hand, type erased error for a service that returns [`SvcBoxFut`]
+///
+/// this is useful for early returns
+///```
+/// impl<B> Service<Request<B>> for ConnectionService<B>
+/// where
+///     B: hyper::body::Body + Send + 'static + Unpin,
+///     B::Data: Send,
+///     B::Error: Into<BoxError>,
+/// {
+///     type Response = Response<Body>;
+///     type Error = BoxError;
+///     type Future = SvcBoxFut<Self::Response, Self::Error>;
+/// 
+///     fn poll_ready(&mut self, _: &mut std::task::Context<'_>) -> Poll<Result<(), Self::Error>> {
+///         Poll::Ready(Ok(()))
+///     }
+/// 
+///     fn call(&mut self, req: Request<B>) -> Self::Future {
+///         let Some(peer) = req.extensions().get::<Peer>().cloned() else {
+///             return boxfut_err("no Peer info found on request");
+///         };
+///
+///         //..
+///
+///         svc.call(req)
+///     }
+/// }
+///```
 pub fn boxfut_err<R>(e: impl std::fmt::Display) -> SvcBoxFut<R, BoxError> {
     let err: BoxError = e.to_string().into();
     Box::pin(async { Err(err) })
