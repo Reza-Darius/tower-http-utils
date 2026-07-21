@@ -61,11 +61,14 @@ pin_project! {
     /// type, this is similar to [`http_body_util::Either`]
     #[project = BodyProj]
     pub enum ResponseBody<B> {
+        #[doc(hidden)]
         Full {
             #[pin]
             body: Full<Bytes>,
         },
+        #[doc(hidden)]
         Empty,
+        #[doc(hidden)]
         Wrapped {
             #[pin]
             body: B

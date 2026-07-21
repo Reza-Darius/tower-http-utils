@@ -1,5 +1,7 @@
 [package]
 name = "tower-http-utils"
+license = "MIT"
+description = "utilities for working with tower http and hyper"
 version = "0.1.0"
 edition = "2024"
 

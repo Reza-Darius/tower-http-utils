@@ -31,7 +31,7 @@ pub fn boxfut_res<E>(status: StatusCode) -> SvcBoxFut<Response<Body>, E> {
     Box::pin(async { Ok(resp) })
 }
 
-/// handler for using with [`tower_http`]'s panic handler middleware
+/// handler for using with [tower_http's panic handler](https://docs.rs/tower-http/latest/tower_http/catch_panic/index.html) panic handler middleware
 pub fn handle_panic(err: Box<dyn Any + Send + 'static>) -> Response<Body> {
     let details = if let Some(s) = err.downcast_ref::<String>() {
         s.clone()
