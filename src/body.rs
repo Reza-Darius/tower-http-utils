@@ -63,12 +63,12 @@ pub trait ResponseBodyExt<B> {
 }
 
 impl<B> ResponseBodyExt<B> for Response<B> {
-    #[inline]
+    #[inline(always)]
     fn map_body(self) -> Response<WrapBody<B>> {
         self.map(WrapBody::wrap)
     }
 
-    #[inline]
+    #[inline(always)]
     fn build(status: StatusCode, body: impl Into<Bytes>) -> Response<WrapBody<B>> {
         Response::builder()
             .status(status)
@@ -76,7 +76,7 @@ impl<B> ResponseBodyExt<B> for Response<B> {
             .unwrap()
     }
 
-    #[inline]
+    #[inline(always)]
     fn empty(status: StatusCode) -> Response<WrapBody<B>> {
         Response::builder()
             .status(status)
@@ -84,7 +84,7 @@ impl<B> ResponseBodyExt<B> for Response<B> {
             .unwrap()
     }
 
-    #[inline]
+    #[inline(always)]
     fn ok() -> Response<WrapBody<B>> {
         Response::empty(StatusCode::OK)
     }
@@ -139,7 +139,7 @@ where
     type Data = Bytes;
     type Error = B::Error;
 
-    #[inline]
+    #[inline(always)]
     fn poll_frame(
         self: Pin<&mut Self>,
         cx: &mut Context<'_>,
@@ -151,7 +151,7 @@ where
         }
     }
 
-    #[inline]
+    #[inline(always)]
     fn is_end_stream(&self) -> bool {
         match &self {
             WrapBody::Full { body } => body.is_end_stream(),
@@ -160,7 +160,7 @@ where
         }
     }
 
-    #[inline]
+    #[inline(always)]
     fn size_hint(&self) -> SizeHint {
         match &self {
             WrapBody::Full { body } => body.size_hint(),

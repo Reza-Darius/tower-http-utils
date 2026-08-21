@@ -48,18 +48,21 @@ pub fn svc_clone<S: Clone + Sized>(inner: &mut S) -> S {
 ///     }
 /// }
 ///```
+#[inline(always)]
 pub fn boxfut_err<R>(e: impl std::fmt::Display) -> SvcBoxFut<R, BoxError> {
     let err: BoxError = e.to_string().into();
     Box::pin(async { Err(err) })
 }
 
 /// construct an [`http::Response`] for a service that returns [`SvcBoxFut`]
+#[inline(always)]
 pub fn boxfut_res<E>(status: StatusCode) -> SvcBoxFut<Response<Body>, E> {
     let resp = response(status);
     Box::pin(async { Ok(resp) })
 }
 
 /// handler for using with [tower_http's panic handler](https://docs.rs/tower-http/latest/tower_http/catch_panic/index.html) panic handler middleware
+#[inline(always)]
 pub fn handle_panic(err: Box<dyn Any + Send + 'static>) -> Response<Body> {
     let details = if let Some(s) = err.downcast_ref::<String>() {
         s.clone()
@@ -74,6 +77,7 @@ pub fn handle_panic(err: Box<dyn Any + Send + 'static>) -> Response<Body> {
 }
 
 /// helper function to build a response with a specific body
+#[inline(always)]
 pub fn response(status: StatusCode) -> Response<Body> {
     Response::builder()
         .status(status)
@@ -83,6 +87,7 @@ pub fn response(status: StatusCode) -> Response<Body> {
 
 
 /// consturcts an empty [`Body`] 
+#[inline(always)]
 pub fn empty() -> Body {
     Empty::<Bytes>::new()
         // .map_err(|never| match never {})
@@ -91,6 +96,7 @@ pub fn empty() -> Body {
 }
 
 /// consturcts a [`Body`] with data
+#[inline(always)]
 pub fn full(chunk: impl Into<Bytes>) -> Body {
     Full::new(chunk.into()).map_err(Into::into).boxed_unsync()
 }
