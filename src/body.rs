@@ -48,7 +48,7 @@ pub trait ResponseBodyExt<B> {
     /// maps a response's body to the ResponseBody wrapper type
     ///
     /// intended for the happy path
-    fn map_body(self) -> Response<WrapBody<B>>;
+    fn into_wrapped(self) -> Response<WrapBody<B>>;
 
     /// builds a response with a response body
     fn build(status: StatusCode, body: impl Into<Bytes>) -> Response<WrapBody<B>>;
@@ -64,7 +64,7 @@ pub trait ResponseBodyExt<B> {
 
 impl<B> ResponseBodyExt<B> for Response<B> {
     #[inline(always)]
-    fn map_body(self) -> Response<WrapBody<B>> {
+    fn into_wrapped(self) -> Response<WrapBody<B>> {
         self.map(WrapBody::wrap)
     }
 
