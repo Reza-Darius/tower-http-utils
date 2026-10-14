@@ -8,9 +8,9 @@ use tracing::{error, trace};
 
 pub struct ServerOptions;
 
-/// starts and serves a HTTP server capable to service HTTP1 and HTTP2 for the given service
+/// starts and serves a HTTP server capable of servicing HTTP1 and HTTP2 for the given service
 ///
-/// implements graceful shutdown on ctrl-c
+/// supports graceful shutdown on SIGINT (ctrl-c)
 async fn serve_http<S, B>(
     addr: impl ToSocketAddrs,
     opts: ServerOptions,

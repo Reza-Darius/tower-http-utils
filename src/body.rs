@@ -36,9 +36,15 @@ use std::{
 
 use bytes::Bytes;
 use http::{Response, StatusCode};
-use http_body_util::Full;
+use http_body_util::{Full, combinators::UnsyncBoxBody};
 use hyper::body::{Frame, SizeHint};
 use pin_project_lite::pin_project;
+use tower::BoxError;
+
+/// An [`hyper::body::Body`] type thats suitable as a "catch-all" body type inside an application
+///
+/// This type is appropiate for the "leaf" service inside a tower stack
+pub type Body = UnsyncBoxBody<Bytes, BoxError>;
 
 /// Extension trait to provide some useful utilities for working with tower http services that
 /// often return multiple body types
@@ -92,9 +98,9 @@ impl<B> ResponseBodyExt<B> for Response<B> {
 
 pin_project! {
     /// a body which is generic over a wrapped body while being able to hold a body of a different
-    /// type, this is similar to [`http_body_util::Either`].
+    /// type, this is similar to [`http_body_util::Either`] in this example: https://github.com/tower-rs/tower-http/tree/main/examples/custom-future-multiple-bodies
     ///
-    /// This type is most useful for middleware, for constructing concrete "leaf" services consider
+    /// This type is primarily target at middleware services and layers, for "leaf" services consider
     /// [`Body`](super::alias::Body)
     #[project = BodyProj]
     pub enum WrapBody<B> {

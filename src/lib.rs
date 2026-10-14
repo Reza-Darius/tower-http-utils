@@ -2,11 +2,10 @@
 //!
 //! Provides type aliases, helper functions, and extension traits
 
-pub mod alias;
+#![allow(dead_code, unused)]
 pub mod body;
-pub mod functions;
+pub mod service_helper;
 pub mod server;
 
-pub use alias::*;
 pub use body::*;
-pub use functions::*;
+pub use service_helper::*;
