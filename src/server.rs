@@ -4,7 +4,7 @@
 //! use tower::service_fn;
 //!
 //! #[tokio::main]
-//! async fn main() -> Result<(), Box<dyn std::error::Error>>{
+//! async fn main() -> Result<(), Box<dyn std::error::Error>> {
 //!     let addr = "127.0.0.1:8000";
 //!     let svc = service_fn(|req: Request<_>| async {
 //!         let res = Response::builder()
