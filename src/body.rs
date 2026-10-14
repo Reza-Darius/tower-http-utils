@@ -11,7 +11,7 @@
 //!     E: Into<BoxError>,
 //! {
 //!     type Output = Result<Response<WrapBody<ResB>>, BoxError>;
-//! 
+//!
 //!     fn poll(
 //!         self: std::pin::Pin<&mut Self>,
 //!         cx: &mut std::task::Context<'_>,

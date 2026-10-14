@@ -4,8 +4,8 @@
 
 #![allow(dead_code, unused)]
 pub mod body;
-pub mod service_helper;
 pub mod server;
+pub mod service_helper;
 
 pub use body::*;
 pub use service_helper::*;
