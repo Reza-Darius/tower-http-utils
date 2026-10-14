@@ -1,3 +1,24 @@
+//! Helper for creating TCP server with [`hyper`]
+//! ```
+//! use http_body_util::Full;
+//! use tower::service_fn;
+//!
+//! #[tokio::main]
+//! async fn main() -> Result<(), Box<dyn std::error::Error>>{
+//!     let addr = "127.0.0.1:8000";
+//!     let svc = service_fn(|req: Request<_>| async {
+//!         let res = Response::builder()
+//!             .status(http::StatusCode::OK)
+//!             .body(Full::<bytes::Bytes>::from("hello"))
+//!             .unwrap();
+//!         Ok::<_, std::convert::Infallible>(res)
+//!     });
+//!     serve_http(addr, ServerOptions::default(), svc).await?;
+//!
+//!     Ok(())
+//! }
+//! ```
+
 use std::{error::Error, pin::pin, time::Duration};
 
 use http::{Request, Response};
@@ -6,12 +27,15 @@ use tokio::net::{TcpListener, ToSocketAddrs};
 use tower::Service;
 use tracing::{error, trace};
 
+use crate::ResponseBodyExt;
+
+#[derive(Debug, Default)]
 pub struct ServerOptions;
 
 /// starts and serves a HTTP server capable of servicing HTTP1 and HTTP2 for the given service
 ///
 /// supports graceful shutdown on SIGINT (ctrl-c)
-async fn serve_http<S, B>(
+pub async fn serve_http<S, B>(
     addr: impl ToSocketAddrs,
     opts: ServerOptions,
     service: S,

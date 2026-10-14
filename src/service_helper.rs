@@ -1,4 +1,4 @@
-//! helper functions
+//! Helpful utilites when working with tower [`services`][`tower::Service`]
 use std::{any::Any, pin::Pin};
 
 use bytes::Bytes;

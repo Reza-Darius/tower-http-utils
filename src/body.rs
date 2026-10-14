@@ -1,4 +1,4 @@
-//! [`http::Response`] extension utilities
+//! [`http::Response`] body utilites
 //!
 //! An example of a middleware service where we either want to "pass through" the response unaltered
 //! or build a custom response in case of an error
@@ -54,15 +54,15 @@ pub trait ResponseBodyExt<B> {
     /// maps a response's body to the ResponseBody wrapper type
     ///
     /// intended for the happy path
-    fn into_wrapped(self) -> Response<WrapBody<B>>;
+    fn wrap_body(self) -> Response<WrapBody<B>>;
 
     /// builds a response with a response body
-    fn build(status: StatusCode, body: impl Into<Bytes>) -> Response<WrapBody<B>>;
+    fn new_with_wrap(status: StatusCode, body: impl Into<Bytes>) -> Response<WrapBody<B>>;
 
     /// builds a response with an empty response body
     ///
     /// useful for creating ad-hoc error responses
-    fn empty(status: StatusCode) -> Response<WrapBody<B>>;
+    fn new_with_status(status: StatusCode) -> Response<WrapBody<B>>;
 
     /// builds a response with an empty response body, and 200 status code
     fn ok() -> Response<WrapBody<B>>;
@@ -70,12 +70,12 @@ pub trait ResponseBodyExt<B> {
 
 impl<B> ResponseBodyExt<B> for Response<B> {
     #[inline(always)]
-    fn into_wrapped(self) -> Response<WrapBody<B>> {
+    fn wrap_body(self) -> Response<WrapBody<B>> {
         self.map(WrapBody::wrap)
     }
 
     #[inline(always)]
-    fn build(status: StatusCode, body: impl Into<Bytes>) -> Response<WrapBody<B>> {
+    fn new_with_wrap(status: StatusCode, body: impl Into<Bytes>) -> Response<WrapBody<B>> {
         Response::builder()
             .status(status)
             .body(WrapBody::new(body))
@@ -83,7 +83,7 @@ impl<B> ResponseBodyExt<B> for Response<B> {
     }
 
     #[inline(always)]
-    fn empty(status: StatusCode) -> Response<WrapBody<B>> {
+    fn new_with_status(status: StatusCode) -> Response<WrapBody<B>> {
         Response::builder()
             .status(status)
             .body(WrapBody::empty())
@@ -92,7 +92,7 @@ impl<B> ResponseBodyExt<B> for Response<B> {
 
     #[inline(always)]
     fn ok() -> Response<WrapBody<B>> {
-        Response::empty(StatusCode::OK)
+        Response::new_with_status(StatusCode::OK)
     }
 }
 
